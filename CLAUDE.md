@@ -38,6 +38,12 @@ pip install -r requirements.txt
 streamlit run app.py
 ```
 
+## Version Control
+
+- After every significant file edit (Write or Edit tool calls), auto-commit the changed file via a PostToolUse hook in `.claude/settings.json`
+- Commit messages use the format `auto: update <filename>`
+- For manual commits (multi-file changes, features), use a descriptive message following the existing commit style
+
 ## Read First
 
 - `PRD.md` in this folder has the full product requirements
