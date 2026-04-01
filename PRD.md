@@ -91,7 +91,21 @@ This is the core of Haven. Every user message goes through two sequential model 
 **Input:**
 - The user's latest message
 - Conversation history (last N turns)
-- The current `active_branches` array (see Session State)
+- For each active branch: an ASCII subtree expanded downward from `current_node` to `max_child_depth` levels (default: full depth). The current node is marked `← HERE`. Leaf nodes are marked `[leaf]`. The branch's path from root is shown as context above the tree.
+
+Example per-branch context block:
+```
+Path: root → violations_of_consent
+  violations_of_consent  ← HERE
+    why_do_violations_happen [leaf]
+    was_my_consent_violated [leaf]
+    how_do_violations_affect_people
+      coercive_control [leaf]
+      emotional_impact [leaf]
+    responding_to_consent_violations
+      coping_strategies [leaf]
+      talking_to_someone [leaf]
+```
 
 **Output:** A structured JSON object:
 
@@ -99,27 +113,26 @@ This is the core of Haven. Every user message goes through two sequential model 
 {
   "reasoning": "Why these branch updates were made",
   "new_active_branches": [
-    {
-      "current_node": "node_id",
-      "path": ["root", "...", "node_id"],
-      "children": ["child_id_1", "child_id_2"]
-    }
+    { "current_node": "node_id" }
   ]
 }
 ```
 
-Per-branch decisions made by the navigator (in a single LLM call across all branches):
+The model declares only destination `current_node` values. Python reconstructs `path` and `children` from the map index after every call.
 
-- **stay**: Branch is unchanged — current node is still the right level of specificity
-- **shift_down**: Branch is replaced by one or more of its children. Each selected child becomes its own new branch entry (fan-out allowed). The parent branch is removed.
-- **shift_up**: Current node is deactivated; its parent becomes the active node for this branch. Used when the user signals the current topic doesn't apply or they want to broaden scope.
+Navigation model — for each active branch, the model may:
+
+- **Stay**: output the same `current_node` — topic is at the right level
+- **Go deeper**: output any descendant at any depth — including grandchildren or deeper. Use when the user's message is specific enough to skip levels.
+- **Go up**: output an ancestor node — use when the user signals the topic doesn't apply and they want to broaden
+- **Deactivate**: omit the branch from `new_active_branches` entirely — use when the topic is fully irrelevant
+- **Fan-out**: output multiple entries that were previously one branch — use when the user's message maps to multiple distinct subtopics simultaneously
 
 **Requirements:**
 - The navigator must ONLY reference nodes that exist in the map. It cannot invent topics.
 - All branches are evaluated in a single LLM call.
-- Navigation should feel natural — 2–4 clarifying turns max before branches reach leaf nodes.
-- The navigator can shift branches up if the user changes topic or says something doesn't apply.
-- The `active_branches` array can grow freely as branches shift down to multiple children.
+- Navigation should feel natural — the user should reach relevant leaf content within 2–4 turns for a typical query; specific queries may reach a leaf in one turn.
+- The `active_branches` array can grow freely via fan-out.
 
 #### Step 2: Responder
 
@@ -234,11 +247,14 @@ navigator.py called with:
   - active_branches (each with current_node, path, children)
     │
     ▼
-Navigator returns JSON: {reasoning, new_active_branches}
-  - each branch: stay | shift_up (parent replaces child) | shift_down (children replace parent, fan-out allowed)
+Navigator returns JSON: {reasoning, new_active_branches: [{current_node}]}
+  - model declares destination nodes only; any-depth jumps allowed; omitted branch = deactivated
     │
     ▼
-session.py updates active_branches, navigator_state
+Python reconstructs path + children for each new branch from map index
+    │
+    ▼
+session.py updates active_branches (full branch objects), navigator_state
     │
     ▼
 knowledge.py fetches source excerpts for any leaf nodes in active_branches
