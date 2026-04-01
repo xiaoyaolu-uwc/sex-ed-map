@@ -46,3 +46,49 @@ def get_initial_branches(index: dict, root_id: str) -> list[dict]:
             "children": root["children"],
         }
     ]
+
+
+def reconstruct_branch(index: dict, node_id: str) -> dict:
+    """Build a full branch object for node_id from the map index.
+
+    Walks the parent_id chain to reconstruct the path from root.
+    """
+    path = []
+    current = node_id
+    while current is not None:
+        path.append(current)
+        current = index[current]["parent_id"]
+    path.reverse()
+    return {
+        "current_node": node_id,
+        "path": path,
+        "children": index[node_id]["children"],
+    }
+
+
+def build_subtree_text(
+    index: dict,
+    node_id: str,
+    max_depth: int,
+    _depth: int = 0,
+) -> str:
+    """Render the subtree rooted at node_id as indented text for the navigator prompt.
+
+    The root call (depth 0) is marked '← HERE'.
+    Leaf nodes are marked '[leaf]'.
+    Expands up to max_depth levels below the root.
+    """
+    node = index[node_id]
+    indent = "  " * _depth
+    here = "  ← HERE" if _depth == 0 else ""
+    leaf = " [leaf]" if not node["children"] else ""
+    line = f"{indent}{node_id} — {node['topic']}{here}{leaf}"
+
+    if not node["children"] or _depth >= max_depth:
+        return line
+
+    child_lines = [
+        build_subtree_text(index, child_id, max_depth, _depth + 1)
+        for child_id in node["children"]
+    ]
+    return line + "\n" + "\n".join(child_lines)

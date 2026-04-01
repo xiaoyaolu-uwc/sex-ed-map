@@ -45,6 +45,13 @@ streamlit run app.py
 - Commit messages use the format `auto: update <filename>`
 - For manual commits (multi-file changes, features), use a descriptive message following the existing commit style
 
+## End-of-Build Summary
+
+After any extensive build (3+ files written or significantly edited), close with:
+1. What changed at the **feature level** (not file-by-file)
+2. Where each thing lives in the repo
+3. How the user can test it
+
 ## Read First
 
 - `PRD.md` in this folder has the full product requirements

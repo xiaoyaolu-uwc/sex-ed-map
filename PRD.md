@@ -202,31 +202,33 @@ Navigation model — for each active branch, the model may:
 
 ```
 haven/
-├── README.md
 ├── requirements.txt
 │
 ├── knowledge_map/
 │   ├── map.json                # The knowledge tree (hand-curated)
-│   └── loader.py               # load_map() → returns tree as Python dict
+│   └── loader.py               # load_map() → (raw_tree, index)
 │
 ├── pipeline/
-│   ├── navigator.py            # Calls fast model → new active_branches array
+│   ├── navigator.py            # build_user_message(), navigate() — LLM call + parse + reconstruct
 │   └── responder.py            # Calls quality model → user-facing message
 │
 ├── prompts/
-│   ├── navigator.md            # System prompt for navigation model
+│   ├── navigator.md            # System prompt for navigation model (most-iterated file)
 │   └── responder.md            # System prompt for response model
 │
 ├── services/
-│   ├── knowledge.py            # Tree traversal: get_node(), get_children(), get_sources()
+│   ├── knowledge.py            # All map logic: get_node(), get_children(), get_sources(),
+│   │                           #   reconstruct_branch(), build_subtree_text()
 │   └── session.py              # Thin wrapper around st.session_state
 │
-├── app.py                      # Streamlit entrypoint
+├── tests/
+│   └── test_navigator.py       # Standalone test harness script (not pytest)
 │
+├── app.py                      # Streamlit entrypoint
 ├── static/
 │   └── map.txt                 # ASCII representation of the knowledge tree
 │
-└── config.py                   # API keys, model names, settings
+└── config.py                   # API keys, model names, MAX_CHILD_DEPTH, HISTORY_WINDOW
 ```
 
 ### Data Flow (One Conversation Turn)
