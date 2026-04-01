@@ -6,8 +6,8 @@ Mental health support tool that guides users to relevant therapeutic content via
 
 Two-model pipeline over a hand-curated knowledge map (JSON tree of therapeutic topics + source excerpts):
 
-1. **Navigator** (fast/cheap model) — reads user message + conversation state + current map position → outputs structured JSON deciding where to move on the tree
-2. **Responder** (quality model) — reads navigator output + node content → generates empathetic user-facing message with citations
+1. **Navigator** (fast/cheap model) — reads user message + conversation history + `active_branches` → outputs a new `active_branches` array by shifting each branch up, keeping it, or expanding it down to one or more children
+2. **Responder** (quality model) — reads session state + source excerpts from any leaf nodes currently in `active_branches` → generates empathetic user-facing message with citations
 
 Frontend is Streamlit. Session state is `st.session_state`. No database.
 
@@ -27,7 +27,7 @@ config.py         # API keys, model names
 
 - Prompts live in `prompts/` as markdown files, not as strings in Python code
 - The knowledge map is a single JSON file loaded into memory at startup — no database
-- Navigator output is always structured JSON with fields: `action`, `target_node`, `reasoning`, `context_for_responder`
+- Navigator output is always structured JSON: a `reasoning` string and a `new_active_branches` array. Each branch has `current_node`, `path` (root → node), and `children` (IDs of child nodes).
 - All therapeutic content in responses must cite sources from the knowledge map. No hallucination.
 - Config (API keys, model selection) lives in `config.py` and uses environment variables
 
