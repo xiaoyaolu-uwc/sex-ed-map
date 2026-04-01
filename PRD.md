@@ -84,35 +84,42 @@ This is the core of Haven. Every user message goes through two sequential model 
 
 #### Step 1: Navigator
 
-**Purpose:** Decide where to move on the knowledge map based on the user's message.
+**Purpose:** Update the set of active branches on the knowledge map based on the user's message.
 
 **Model:** Fast and cheap (e.g., GPT-4o-mini, Claude Haiku, or similar). The navigator's job is structured reasoning, not eloquence.
 
 **Input:**
 - The user's latest message
 - Conversation history (last N turns)
-- Current position on the knowledge map (node ID + node metadata)
-- Available moves: children of current node, siblings, or parent (go back up)
+- The current `active_branches` array (see Session State)
 
 **Output:** A structured JSON object:
 
 ```json
 {
-  "action": "navigate" | "stay" | "respond",
-  "target_node": "node_id",
-  "reasoning": "Why this navigation decision was made",
-  "context_for_responder": "Key info to pass to the response model"
+  "reasoning": "Why these branch updates were made",
+  "new_active_branches": [
+    {
+      "current_node": "node_id",
+      "path": ["root", "...", "node_id"],
+      "children": ["child_id_1", "child_id_2"]
+    }
+  ]
 }
 ```
 
-- `"navigate"`: Move to a different node (deeper, lateral, or up)
-- `"stay"`: The current node is still the right place; ask another clarifying question
-- `"respond"`: We've reached the right leaf / have enough context; generate a substantive answer
+Per-branch decisions made by the navigator (in a single LLM call across all branches):
+
+- **stay**: Branch is unchanged — current node is still the right level of specificity
+- **shift_down**: Branch is replaced by one or more of its children. Each selected child becomes its own new branch entry (fan-out allowed). The parent branch is removed.
+- **shift_up**: Current node is deactivated; its parent becomes the active node for this branch. Used when the user signals the current topic doesn't apply or they want to broaden scope.
 
 **Requirements:**
-- The navigator must ONLY choose nodes that exist in the map. It cannot invent topics.
-- Navigation should feel natural — the user shouldn't feel like they're being interrogated. 2–4 clarifying questions max before reaching content.
-- The navigator must be able to go back up the tree if the user changes topic or says something doesn't apply.
+- The navigator must ONLY reference nodes that exist in the map. It cannot invent topics.
+- All branches are evaluated in a single LLM call.
+- Navigation should feel natural — 2–4 clarifying turns max before branches reach leaf nodes.
+- The navigator can shift branches up if the user changes topic or says something doesn't apply.
+- The `active_branches` array can grow freely as branches shift down to multiple children.
 
 #### Step 2: Responder
 
@@ -121,21 +128,20 @@ This is the core of Haven. Every user message goes through two sequential model 
 **Model:** High-quality (e.g., Claude Sonnet). The responder's job is empathetic, clear, well-written communication.
 
 **Input:**
-- The navigator's output (action, target node, reasoning, context)
-- The target node's metadata (topic, description, source excerpts if leaf)
-- Conversation history
+- Session state: conversation history + `new_active_branches` (output from navigator)
+- Source excerpts from any nodes currently in `active_branches` that have them (leaf nodes)
 
-**Output:** A natural-language message to the user. Two modes:
+**Output:** A single natural-language message to the user synthesizing across all active branches. Two modes:
 
-1. **Follow-up question mode** (when navigator says `navigate` or `stay`): An empathetic question that helps narrow down what the user needs. Should reference the available subtopics without listing them mechanically.
+1. **Clarifying mode** (when no active branches are at leaf nodes): An empathetic question that helps narrow down what the user needs. Should reflect the range of currently active branches without listing them mechanically.
 
-2. **Response mode** (when navigator says `respond`): A substantive answer drawing from the source excerpts at the current node. Must include inline citations (e.g., `[Author, Year]`). Should be warm, grounded, and actionable. Never hallucinates beyond what's in the sources.
+2. **Response mode** (when one or more active branches are at leaf nodes): A substantive answer drawing from the source excerpts at those nodes. Must include inline citations (e.g., `[Author, Year]`). Should be warm, grounded, and actionable. Never hallucinates beyond what's in the sources.
 
 **Requirements:**
 - Responses must cite sources when drawing from them. No uncited therapeutic claims.
 - The tone must be warm and non-clinical — like talking to a knowledgeable, caring friend.
-- Follow-up questions must feel natural, not like a diagnostic questionnaire.
-- The responder must never contradict or override the navigator's decision about where to go on the map.
+- Clarifying questions must feel natural, not like a diagnostic questionnaire.
+- The responder reads state directly — there is no handoff object from the navigator beyond the updated `active_branches`.
 
 ### 3.3 Session State
 
@@ -145,10 +151,17 @@ This is the core of Haven. Every user message goes through two sequential model 
 
 | Key | Type | Description |
 |-----|------|-------------|
-| `conversation_history` | list of dicts | `{"role": "user"|"assistant", "content": "..."}` |
-| `current_node` | string | Node ID of current position on map |
-| `visited_nodes` | list of strings | Node IDs visited during this session |
-| `navigator_state` | dict | Last navigator output (for debugging/display) |
+| `conversation_history` | list of dicts | `{"role": "user"\|"assistant", "content": "..."}` |
+| `active_branches` | list of branch objects | Current active positions on the map. Each branch: `{current_node, path, children}` |
+| `navigator_state` | dict | Last navigator output (`reasoning` + `new_active_branches`) for debugging/display |
+
+**Branch object:**
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `current_node` | string | Node ID of this branch's active position |
+| `path` | list of strings | Node IDs from root to `current_node` (inclusive) |
+| `children` | list of strings | Node IDs of `current_node`'s children (empty if leaf) |
 
 **Lifecycle:** Session state exists only while the browser tab is open. No persistence across refreshes. This is fine for MVP.
 
@@ -158,14 +171,14 @@ This is the core of Haven. Every user message goes through two sequential model 
 
 1. **Chat window** (main area): Standard chat interface. User types messages, Haven responds. Messages stream in real-time using Streamlit's streaming support. Cited sources appear inline in assistant messages.
 
-2. **Session state debug panel** (sidebar or expander): Shows current node, visited nodes, and the last navigator output as raw JSON. This is for development — helps you see exactly what the pipeline is doing.
+2. **Session state debug panel** (sidebar or expander): Shows the current `active_branches` array and the last navigator output (`reasoning` + `new_active_branches`) as raw JSON. This is for development — helps you see exactly what the pipeline is doing.
 
-3. **Static knowledge map display** (sidebar or expander): Renders the full tree structure as a text/ASCII tree. Indicates the current position with a marker (e.g., `→` or `*`). This is read from a pre-generated text file or rendered from the JSON at startup.
+3. **Static knowledge map display** (sidebar or expander): Renders the full tree structure as a text/ASCII tree. Marks all currently active branch nodes (e.g., `→`). Multiple nodes may be marked simultaneously. Rendered from the JSON at startup and updated each turn.
 
 **Requirements:**
 - The chat must stream responses token-by-token (not wait for the full response before displaying)
 - The debug panel must update after every turn
-- The map display must highlight the current position after every turn
+- The map display must highlight all active branch positions after every turn
 - A "New Conversation" button resets session state
 
 ---
@@ -184,7 +197,7 @@ haven/
 │   └── loader.py               # load_map() → returns tree as Python dict
 │
 ├── pipeline/
-│   ├── navigator.py            # Calls fast model → structured JSON map update
+│   ├── navigator.py            # Calls fast model → new active_branches array
 │   └── responder.py            # Calls quality model → user-facing message
 │
 ├── prompts/
@@ -212,31 +225,34 @@ User message
 app.py receives input
     │
     ▼
-session.py loads current state (conversation history, current node)
+session.py loads current state (conversation_history, active_branches)
     │
     ▼
 navigator.py called with:
   - user message
   - conversation history
-  - current node + its children/siblings (from knowledge.py)
+  - active_branches (each with current_node, path, children)
     │
     ▼
-Navigator returns JSON: {action, target_node, reasoning, context}
+Navigator returns JSON: {reasoning, new_active_branches}
+  - each branch: stay | shift_up (parent replaces child) | shift_down (children replace parent, fan-out allowed)
     │
     ▼
-session.py updates current_node, visited_nodes
+session.py updates active_branches, navigator_state
+    │
+    ▼
+knowledge.py fetches source excerpts for any leaf nodes in active_branches
     │
     ▼
 responder.py called with:
-  - navigator output
-  - target node metadata + source excerpts (from knowledge.py)
-  - conversation history
+  - session state (conversation history + new_active_branches)
+  - source excerpts from active leaf nodes
     │
     ▼
 Responder streams response back to UI
     │
     ▼
-app.py displays message + updates debug panel + map marker
+app.py displays message + updates debug panel + marks all active branch nodes on map
 ```
 
 ### Key Technical Decisions
@@ -281,6 +297,6 @@ The MVP is successful if:
 These don't need to be resolved before building. Flag them as they come up.
 
 1. **Which specific models to use?** Navigator and responder model choices should be configurable in `config.py`. Start with whatever is convenient and iterate.
-2. **How to handle the user wanting to explore multiple branches?** MVP can keep it simple — one active node at a time. But note this will need to evolve.
+2. **How to handle the user wanting to explore multiple branches?** The system supports multiple active branches natively. The `active_branches` array can grow freely as branches shift down to multiple children. No artificial cap for MVP.
 3. **How much conversation history to pass to models?** Start with full history. If context windows become an issue, truncate oldest turns first.
 4. **What happens when the user asks something completely off-map?** The responder should acknowledge this gracefully and redirect. Define the exact behavior during prompt iteration.
