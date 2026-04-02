@@ -20,16 +20,14 @@ def _require(name: str) -> str:
 
 
 ANTHROPIC_API_KEY = _require("ANTHROPIC_API_KEY")
-
-NAVIGATOR_MODEL = os.environ.get("NAVIGATOR_MODEL", "claude-haiku-4-5-20251001")
-RESPONDER_MODEL = os.environ.get("RESPONDER_MODEL", "claude-sonnet-4-6")
+NAVIGATOR_MODEL = _require("NAVIGATOR_MODEL")
+RESPONDER_MODEL = _require("RESPONDER_MODEL")
 
 # Number of conversation turns to pass to models (most recent N)
-HISTORY_WINDOW = int(os.environ.get("HISTORY_WINDOW", "20"))
+HISTORY_WINDOW = int(_require("HISTORY_WINDOW"))
 
 # How many levels below the current node to expand in the navigator's subtree view.
-# Set to a large number for full depth (default). Lower this if context gets too long.
-MAX_CHILD_DEPTH = int(os.environ.get("MAX_CHILD_DEPTH", "999"))
+MAX_CHILD_DEPTH = int(_require("MAX_CHILD_DEPTH"))
 
 # Root node ID in the knowledge map
-ROOT_NODE_ID = os.environ.get("ROOT_NODE_ID", "root_consent")
+ROOT_NODE_ID = _require("ROOT_NODE_ID")
