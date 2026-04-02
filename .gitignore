@@ -22,6 +22,7 @@ env/
 .env
 .env.*
 *.env
+!.env.example
 
 # Streamlit
 .streamlit/secrets.toml

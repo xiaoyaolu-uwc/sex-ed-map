@@ -1,5 +1,9 @@
 import os
 
+from dotenv import load_dotenv
+
+load_dotenv()
+
 
 def _require(name: str) -> str:
     """Read a required environment variable, failing loudly if missing.
