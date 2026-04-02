@@ -37,12 +37,6 @@ session.initialise(index, config.ROOT_NODE_ID)
 with st.sidebar:
     st.title("Haven")
 
-    if st.button("New Conversation", use_container_width=True):
-        session.reset(index, config.ROOT_NODE_ID)
-        st.rerun()
-
-    st.divider()
-
     st.subheader("Knowledge Map")
     state = session.get_state()
     st.markdown(
@@ -73,6 +67,22 @@ with st.sidebar:
 st.header("Haven")
 
 state = session.get_state()
+
+# On first load, generate an opening question from the responder.
+if not state["conversation_history"]:
+    with st.chat_message("assistant"):
+        opening = st.write_stream(
+            responder.respond(
+                user_message="",
+                conversation_history=[],
+                active_branches=state["active_branches"],
+                index=index,
+            )
+        )
+    st.session_state.conversation_history.append(
+        {"role": "assistant", "content": opening}
+    )
+
 for turn in state["conversation_history"]:
     with st.chat_message(turn["role"]):
         st.markdown(turn["content"])

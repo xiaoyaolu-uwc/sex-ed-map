@@ -1,192 +1,199 @@
 {
-  "node_id": "root_consent",
-  "topic": "Consent",
+  "node_id": "root_haven",
+  "topic": "Haven",
   "source_excerpts": [],
   "children": [
     {
-      "node_id": "what_does_consent_look_like",
-      "topic": "What does consent look like?",
-      "children": [],
-      "source_excerpts": [
-        {
-          "text": "Consent is an ongoing negotiation of boundaries rather than a one-time contractual agreement. It requires an 'enthusiastic affirmative response,' meaning the mere absence of a 'no' is insufficient; there must be a clear, uncoerced 'yes'.",
-          "citation": "source 1"
-        },
-        {
-          "text": "The 'FRIES' model defines consent as Freely given, Reversible, Informed, Enthusiastic, and Specific. Consent to one specific act does not imply consent to any subsequent or different acts.",
-          "citation": "source 2"
-        }
-      ]
-    },
-    {
-      "node_id": "building_good_consent_practices",
-      "topic": "Building Good Consent Practices",
+      "node_id": "root_consent",
+      "topic": "Consent",
       "source_excerpts": [],
       "children": [
         {
-          "node_id": "what_makes_consent_hard",
-          "topic": "What makes consent hard?",
+          "node_id": "what_does_consent_look_like",
+          "topic": "What does consent look like?",
           "children": [],
           "source_excerpts": [
             {
-              "text": "Socialized gender roles often dictate a rigid 'script' where one partner is expected to initiate aggressively while the other acts as a gatekeeper. This systemic dynamic inherently discourages explicit, mutual checking-in by framing communication as unnatural.",
-              "citation": "source 3"
-            }
-          ]
-        },
-        {
-          "node_id": "does_consent_ruin_the_mood",
-          "topic": "Does consent ruin the mood?",
-          "children": [],
-          "source_excerpts": [
-            {
-              "text": "The anxiety that asking for consent 'ruins the mood' relies on the false premise that sexual tension requires ambiguity. In clinical observations, couples who integrate verbal check-ins report higher levels of arousal due to increased psychological safety and reduced performance anxiety.",
-              "citation": "source 1"
-            }
-          ]
-        },
-        {
-          "node_id": "how_do_i_avoid_crossing_boundaries",
-          "topic": "How do I avoid crossing boundaries?",
-          "children": [],
-          "source_excerpts": [
-            {
-              "text": "A primary mechanism of accidental boundary crossing is 'assuming progression.' Because a partner consented to one level of intimacy, the initiator assumes they are on a predetermined escalator to intercourse. Pausing to establish verbal checkpoints prevents these assumptions.",
-              "citation": "source 2"
-            }
-          ]
-        },
-        {
-          "node_id": "how_do_i_talk_about_boundaries",
-          "topic": "How do I talk about boundaries?",
-          "children": [],
-          "source_excerpts": [
-            {
-              "text": "The 'sandwich method' is an effective clinical tool for introducing boundaries: start with an affirmation of the relationship, state the specific physical boundary clearly without apologizing, and end with a mutually enjoyable alternative to prevent feelings of rejection.",
-              "citation": "source 1"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "node_id": "giving_and_refusing_consent",
-      "topic": "Giving and Refusing Consent",
-      "source_excerpts": [],
-      "children": [
-        {
-          "node_id": "how_do_i_say_no",
-          "topic": "How do I say no?",
-          "children": [],
-          "source_excerpts": [
-            {
-              "text": "Refusal skills fall into direct and indirect categories. While direct refusal ('Stop, I don't want to') is ideal, individuals facing physical or social power imbalances often rely on indirect refusals (shifting body weight away, changing the subject). Both must be legally and ethically recognized as non-consent.",
-              "citation": "source 2"
-            }
-          ]
-        },
-        {
-          "node_id": "do_i_want_this",
-          "topic": "Do I want this?",
-          "children": [],
-          "source_excerpts": [
-            {
-              "text": "Arousal non-concordance is a physiological phenomenon where the body responds physically to sexual stimuli (e.g., lubrication, erection) without subjective, psychological desire. A physical response is an autonomic reflex, not a form of consent.",
+              "text": "Consent is an ongoing negotiation of boundaries rather than a one-time contractual agreement. It requires an 'enthusiastic affirmative response,' meaning the mere absence of a 'no' is insufficient; there must be a clear, uncoerced 'yes'.",
               "citation": "source 1"
             },
             {
-              "text": "Compulsory sexuality can pressure individuals into believing they 'should' desire an act because of their relationship status or age, masking their authentic lack of interest and leading to compliant behavior.",
-              "citation": "source 3"
-            },
-            {
-              "text": "To differentiate between genuine desire and compliance, trauma practitioners recommend the 'body scan' technique: checking for muscle tension, shallow breathing, or a feeling of dissociation, which strongly indicate the body is rejecting the encounter despite what the mind believes it should do.",
-              "citation": "source 3"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "node_id": "violations_of_consent",
-      "topic": "Violations of Consent",
-      "source_excerpts": [],
-      "children": [
-        {
-          "node_id": "why_do_violations_happen",
-          "topic": "Why do violations happen?",
-          "children": [],
-          "source_excerpts": [
-            {
-              "text": "Most non-stranger consent violations are driven not by a conscious desire to cause harm, but by 'entitlement blind spots'—the perpetrator mistakenly believes that their relationship status, prior encounters, or money spent implicitly waives the need to obtain current, specific consent.",
-              "citation": "source 3"
-            }
-          ]
-        },
-        {
-          "node_id": "was_my_consent_violated",
-          "topic": "Was my consent violated?",
-          "children": [],
-          "source_excerpts": [
-            {
-              "text": "Coercion is the systematic wearing down of someone's boundaries. If a 'yes' is given only after repeated badgering, emotional guilt-tripping, or threats of ending the relationship, that agreement was obtained under duress and constitutes a consent violation.",
-              "citation": "source 1"
-            },
-            {
-              "text": "Stealthing—the non-consensual removal of a condom during intercourse—transforms a consented act into a non-consensual one, as the specific safety conditions under which the initial consent was granted were secretly violated.",
+              "text": "The 'FRIES' model defines consent as Freely given, Reversible, Informed, Enthusiastic, and Specific. Consent to one specific act does not imply consent to any subsequent or different acts.",
               "citation": "source 2"
             }
           ]
         },
         {
-          "node_id": "how_do_violations_affect_people",
-          "topic": "How do violations affect people?",
-          "children": [],
-          "source_excerpts": [
-            {
-              "text": "Following a boundary violation, survivors frequently experience 'betrayal blindness,' a self-preservation mechanism where the brain downplays the severity of the event to maintain a necessary social or emotional attachment to the perpetrator.",
-              "citation": "source 2"
-            }
-          ]
-        },
-        {
-          "node_id": "responding_to_consent_violations",
-          "topic": "Responding to Consent Violations",
+          "node_id": "building_good_consent_practices",
+          "topic": "Building Good Consent Practices",
           "source_excerpts": [],
           "children": [
             {
-              "node_id": "what_do_i_do_in_the_moment",
-              "topic": "What do I do in the moment?",
+              "node_id": "what_makes_consent_hard",
+              "topic": "What makes consent hard?",
               "children": [],
               "source_excerpts": [
                 {
-                  "text": "During an active violation, the autonomic nervous system may trigger a 'freeze' (tonic immobility) or 'fawn' (appeasement) response. This biological survival mechanism temporarily paralyzes the ability to fight back or yell, and should never be mistaken for passivity or agreement.",
-                  "citation": "source 1"
-                }
-              ]
-            },
-            {
-              "node_id": "how_do_i_cope_afterward",
-              "topic": "How do I cope afterward?",
-              "children": [],
-              "source_excerpts": [
-                {
-                  "text": "Somatic experiencing theory emphasizes that trauma is stored in the nervous system. Post-violation coping often requires 'discharging' that trapped energy through physical grounding exercises, rather than attempting to intellectualize the event purely through talk therapy.",
+                  "text": "Socialized gender roles often dictate a rigid 'script' where one partner is expected to initiate aggressively while the other acts as a gatekeeper. This systemic dynamic inherently discourages explicit, mutual checking-in by framing communication as unnatural.",
                   "citation": "source 3"
                 }
               ]
             },
             {
-              "node_id": "can_partners_violate_consent",
-              "topic": "Can partners violate consent?",
+              "node_id": "does_consent_ruin_the_mood",
+              "topic": "Does consent ruin the mood?",
               "children": [],
               "source_excerpts": [
                 {
-                  "text": "Marital or partner rape relies heavily on 'duty to consent' fallacies. While the legal concept of a marital exception to rape has been dismantled, the cultural myth persists that long-term partners owe one another unconditional sexual access.",
+                  "text": "The anxiety that asking for consent 'ruins the mood' relies on the false premise that sexual tension requires ambiguity. In clinical observations, couples who integrate verbal check-ins report higher levels of arousal due to increased psychological safety and reduced performance anxiety.",
+                  "citation": "source 1"
+                }
+              ]
+            },
+            {
+              "node_id": "how_do_i_avoid_crossing_boundaries",
+              "topic": "How do I avoid crossing boundaries?",
+              "children": [],
+              "source_excerpts": [
+                {
+                  "text": "A primary mechanism of accidental boundary crossing is 'assuming progression.' Because a partner consented to one level of intimacy, the initiator assumes they are on a predetermined escalator to intercourse. Pausing to establish verbal checkpoints prevents these assumptions.",
                   "citation": "source 2"
+                }
+              ]
+            },
+            {
+              "node_id": "how_do_i_talk_about_boundaries",
+              "topic": "How do I talk about boundaries?",
+              "children": [],
+              "source_excerpts": [
+                {
+                  "text": "The 'sandwich method' is an effective clinical tool for introducing boundaries: start with an affirmation of the relationship, state the specific physical boundary clearly without apologizing, and end with a mutually enjoyable alternative to prevent feelings of rejection.",
+                  "citation": "source 1"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "node_id": "giving_and_refusing_consent",
+          "topic": "Giving and Refusing Consent",
+          "source_excerpts": [],
+          "children": [
+            {
+              "node_id": "how_do_i_say_no",
+              "topic": "How do I say no?",
+              "children": [],
+              "source_excerpts": [
+                {
+                  "text": "Refusal skills fall into direct and indirect categories. While direct refusal ('Stop, I don't want to') is ideal, individuals facing physical or social power imbalances often rely on indirect refusals (shifting body weight away, changing the subject). Both must be legally and ethically recognized as non-consent.",
+                  "citation": "source 2"
+                }
+              ]
+            },
+            {
+              "node_id": "do_i_want_this",
+              "topic": "Do I want this?",
+              "children": [],
+              "source_excerpts": [
+                {
+                  "text": "Arousal non-concordance is a physiological phenomenon where the body responds physically to sexual stimuli (e.g., lubrication, erection) without subjective, psychological desire. A physical response is an autonomic reflex, not a form of consent.",
+                  "citation": "source 1"
                 },
                 {
-                  "text": "In intimate relationships, severe boundary crossings are often preceded by micro-violations (e.g., ignoring requests to stop tickling). Escalation occurs when these small tests of autonomy are normalized by the couple.",
+                  "text": "Compulsory sexuality can pressure individuals into believing they 'should' desire an act because of their relationship status or age, masking their authentic lack of interest and leading to compliant behavior.",
+                  "citation": "source 3"
+                },
+                {
+                  "text": "To differentiate between genuine desire and compliance, trauma practitioners recommend the 'body scan' technique: checking for muscle tension, shallow breathing, or a feeling of dissociation, which strongly indicate the body is rejecting the encounter despite what the mind believes it should do.",
+                  "citation": "source 3"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "node_id": "violations_of_consent",
+          "topic": "Violations of Consent",
+          "source_excerpts": [],
+          "children": [
+            {
+              "node_id": "why_do_violations_happen",
+              "topic": "Why do violations happen?",
+              "children": [],
+              "source_excerpts": [
+                {
+                  "text": "Most non-stranger consent violations are driven not by a conscious desire to cause harm, but by 'entitlement blind spots'—the perpetrator mistakenly believes that their relationship status, prior encounters, or money spent implicitly waives the need to obtain current, specific consent.",
+                  "citation": "source 3"
+                }
+              ]
+            },
+            {
+              "node_id": "was_my_consent_violated",
+              "topic": "Was my consent violated?",
+              "children": [],
+              "source_excerpts": [
+                {
+                  "text": "Coercion is the systematic wearing down of someone's boundaries. If a 'yes' is given only after repeated badgering, emotional guilt-tripping, or threats of ending the relationship, that agreement was obtained under duress and constitutes a consent violation.",
+                  "citation": "source 1"
+                },
+                {
+                  "text": "Stealthing—the non-consensual removal of a condom during intercourse—transforms a consented act into a non-consensual one, as the specific safety conditions under which the initial consent was granted were secretly violated.",
                   "citation": "source 2"
+                }
+              ]
+            },
+            {
+              "node_id": "how_do_violations_affect_people",
+              "topic": "How do violations affect people?",
+              "children": [],
+              "source_excerpts": [
+                {
+                  "text": "Following a boundary violation, survivors frequently experience 'betrayal blindness,' a self-preservation mechanism where the brain downplays the severity of the event to maintain a necessary social or emotional attachment to the perpetrator.",
+                  "citation": "source 2"
+                }
+              ]
+            },
+            {
+              "node_id": "responding_to_consent_violations",
+              "topic": "Responding to Consent Violations",
+              "source_excerpts": [],
+              "children": [
+                {
+                  "node_id": "what_do_i_do_in_the_moment",
+                  "topic": "What do I do in the moment?",
+                  "children": [],
+                  "source_excerpts": [
+                    {
+                      "text": "During an active violation, the autonomic nervous system may trigger a 'freeze' (tonic immobility) or 'fawn' (appeasement) response. This biological survival mechanism temporarily paralyzes the ability to fight back or yell, and should never be mistaken for passivity or agreement.",
+                      "citation": "source 1"
+                    }
+                  ]
+                },
+                {
+                  "node_id": "how_do_i_cope_afterward",
+                  "topic": "How do I cope afterward?",
+                  "children": [],
+                  "source_excerpts": [
+                    {
+                      "text": "Somatic experiencing theory emphasizes that trauma is stored in the nervous system. Post-violation coping often requires 'discharging' that trapped energy through physical grounding exercises, rather than attempting to intellectualize the event purely through talk therapy.",
+                      "citation": "source 3"
+                    }
+                  ]
+                },
+                {
+                  "node_id": "can_partners_violate_consent",
+                  "topic": "Can partners violate consent?",
+                  "children": [],
+                  "source_excerpts": [
+                    {
+                      "text": "Marital or partner rape relies heavily on 'duty to consent' fallacies. While the legal concept of a marital exception to rape has been dismantled, the cultural myth persists that long-term partners owe one another unconditional sexual access.",
+                      "citation": "source 2"
+                    },
+                    {
+                      "text": "In intimate relationships, severe boundary crossings are often preceded by micro-violations (e.g., ignoring requests to stop tickling). Escalation occurs when these small tests of autonomy are normalized by the couple.",
+                      "citation": "source 2"
+                    }
+                  ]
                 }
               ]
             }
