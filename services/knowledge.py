@@ -181,7 +181,7 @@ def render_map(index: dict, root_id: str, active_branches: list[dict]) -> str:
             )
         )
 
-    inner = "<br>".join(lines)
+    inner = "\n".join(lines)
     return f'<pre style="font-family:monospace;font-size:0.85em;line-height:1.5">{inner}</pre>'
 
 
