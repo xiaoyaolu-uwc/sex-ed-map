@@ -30,11 +30,18 @@ def initialise(index: dict, root_id: str) -> None:
             {
                 "role": "assistant",
                 "content": (
-                    "Hi, I'm Haven. I'm here to help you think through questions "
-                    "about relationships, boundaries, and consent — whether something "
-                    "happened to you, something you're navigating with a partner, or "
-                    "just something you've been wondering about.\n\n"
-                    "What's on your mind?"
+                    "Hi, I'm Haven.\n\n"
+                    "I'm here to help you think through questions about consent, "
+                    "boundaries, and relationships — whether something happened to you, "
+                    "something you're navigating with a partner, or just something "
+                    "you've been sitting with.\n\n"
+                    "Here's how I work: I'll start by learning a bit about what's on "
+                    "your mind. As the conversation develops, I'll look for relevant "
+                    "content from evidence-based sources. When I find something that "
+                    "seems useful, I'll let you know what I found and check whether "
+                    "it's what you're looking for — and only if you want it, I'll share "
+                    "the actual guidance, with the sources it comes from.\n\n"
+                    "So to start: what's brought you here today?"
                 ),
             }
         ]
