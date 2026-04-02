@@ -181,8 +181,75 @@ def render_map(index: dict, root_id: str, active_branches: list[dict]) -> str:
             )
         )
 
-    inner = "\n".join(lines)
+    inner = "<br>".join(lines)
     return f'<pre style="font-family:monospace;font-size:0.85em;line-height:1.5">{inner}</pre>'
+
+
+def render_map_text(index: dict, root_id: str, active_branches: list[dict]) -> str:
+    """Render the full knowledge tree as plain text with ASCII position markers.
+
+    Each node is annotated based on its relationship to the active branches:
+      - (*) : current active node
+      - (-) : ancestor on the path to a current node
+      - (+) : direct child of any current node (next explorable step)
+      - (no tag) : all other nodes
+
+    Input:  index (dict) — flat node index from loader.load_map()
+            root_id (str) — node ID of the tree root
+            active_branches (list[dict]) — current branch state from session;
+                each branch: {current_node, path, children}
+    Output: str — plain text; pass to st.code() or st.text()
+    Used by: app.py — rendered alongside the coloured HTML map for comparison
+    """
+    current_nodes = {b["current_node"] for b in active_branches}
+    ancestor_nodes = {
+        nid
+        for b in active_branches
+        for nid in b["path"]
+        if nid not in current_nodes
+    }
+    child_nodes = {
+        cid
+        for b in active_branches
+        for cid in index[b["current_node"]]["children"]
+        if cid not in current_nodes
+    }
+
+    def _tag(node_id: str) -> str:
+        if node_id in current_nodes:
+            return " (*)"
+        if node_id in child_nodes:
+            return " (+)"
+        if node_id in ancestor_nodes:
+            return " (-)"
+        return ""
+
+    def _render_node(node_id: str, prefix: str, child_prefix: str) -> list[str]:
+        node = index[node_id]
+        lines = [f"{prefix}{node['topic']}{_tag(node_id)}"]
+        for i, cid in enumerate(node["children"]):
+            is_last = i == len(node["children"]) - 1
+            lines.extend(
+                _render_node(
+                    cid,
+                    child_prefix + ("└── " if is_last else "├── "),
+                    child_prefix + ("    " if is_last else "│   "),
+                )
+            )
+        return lines
+
+    root = index[root_id]
+    lines = [f"Root: {root['topic']}{_tag(root_id)}"]
+    for i, cid in enumerate(root["children"]):
+        is_last = i == len(root["children"]) - 1
+        lines.extend(
+            _render_node(
+                cid,
+                "└── " if is_last else "├── ",
+                "    " if is_last else "│   ",
+            )
+        )
+    return "\n".join(lines)
 
 
 def build_subtree_text(

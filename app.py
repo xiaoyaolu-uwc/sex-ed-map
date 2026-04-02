@@ -18,7 +18,7 @@ import config
 from knowledge_map.loader import load_map
 from pipeline import navigator, responder
 from services import session
-from services.knowledge import render_map
+from services.knowledge import render_map, render_map_text
 
 st.set_page_config(page_title="Haven", layout="wide")
 
@@ -49,6 +49,13 @@ with st.sidebar:
         render_map(index, config.ROOT_NODE_ID, state["active_branches"]),
         unsafe_allow_html=True,
     )
+
+    with st.expander("Map (text view)", expanded=False):
+        state = session.get_state()
+        st.code(
+            render_map_text(index, config.ROOT_NODE_ID, state["active_branches"]),
+            language=None,
+        )
 
     st.divider()
 
