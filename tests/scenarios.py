@@ -562,3 +562,29 @@ def _multi_branch(b, root_branches: list[dict]) -> list[dict]:
             ),
         },
     ]
+
+
+# ── Public API ───────────────────────────────────────────────────────────────
+
+
+def get_suites(index: dict) -> dict[str, list[dict]]:
+    """Build and return all test suites using the loaded map index.
+
+    Input:  index (dict) — flat node index from knowledge_map.loader.load_map()
+    Output: dict mapping suite name (str) to list of scenario dicts
+    Used by: tests/test_navigator.py
+    """
+    ROOT = "root_consent"
+
+    def b(node_id: str) -> dict:
+        """Shorthand: build a full branch object for a node ID."""
+        return reconstruct_branch(index, node_id)
+
+    root_branches = get_initial_branches(index, ROOT)
+
+    return {
+        "mechanical": _mechanical(b, root_branches),
+        "fan_out": _fan_out(b, root_branches),
+        "experience_sharing": _experience_sharing(b, root_branches),
+        "multi_branch": _multi_branch(b, root_branches),
+    }
