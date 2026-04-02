@@ -43,13 +43,9 @@ def _build_user_message(
     """Assemble the full user-turn message sent to the responder LLM.
 
     Combines up to four sections in order:
-      1. Active branch context — where the conversation sits on the map
-         # TODO(step4): replace this placeholder with the rendering function
-         # decided in the parallel step-4 task. Options are: an inline
-         # formatter over branch["path"] + index lookups, or a new
-         # knowledge.py function (e.g. build_branch_context_text). The
-         # output should show, per branch: path with topic names, leaf status,
-         # and (if leaf) the topic of the leaf node so the model can name it.
+      1. Active branch context — one line per branch: topic names along the
+         path from root, with [here] on the current node and [leaf] if it
+         holds source excerpts. e.g. "Consent → Violations of Consent [here]"
       2. Source excerpts — injected whenever any branch is at a leaf node,
          so the model knows what it can offer (preview) or deliver (advice)
       3. Conversation history — last HISTORY_WINDOW turns
@@ -65,17 +61,13 @@ def _build_user_message(
     """
     parts = ["## Active Branches", ""]
 
-    # TODO(step4): replace with chosen branch context renderer.
-    # For now, emit a minimal placeholder so the code is runnable while
-    # the step-4 decision is pending. Once step-4 is resolved, delete
-    # this block and insert the real rendering call.
     for branch in active_branches:
         node_id = branch["current_node"]
-        path_str = " → ".join(branch["path"])
-        node = index[node_id]
-        leaf_marker = " [leaf]" if is_leaf(index, node_id) else ""
-        parts.append(f"- Path: {path_str}")
-        parts.append(f"  Current: {node_id} — {node['topic']}{leaf_marker}")
+        topics = [index[nid]["topic"] for nid in branch["path"]]
+        topics[-1] += " [here]"
+        if is_leaf(index, node_id):
+            topics[-1] += " [leaf]"
+        parts.append(" → ".join(topics))
     parts.append("")
 
     # Inject source excerpts whenever any branch is at a leaf.
