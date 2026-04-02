@@ -1,6 +1,21 @@
 import os
 
-ANTHROPIC_API_KEY = os.environ.get("ANTHROPIC_API_KEY", "")
+
+def _require(name: str) -> str:
+    """Read a required environment variable, failing loudly if missing.
+
+    Input:  name (str) — the environment variable name
+    Output: str — the value
+    Raises: RuntimeError if the variable is not set or empty
+    Used by: module-level constants below, at import time
+    """
+    value = os.environ.get(name, "").strip()
+    if not value:
+        raise RuntimeError(f"Required environment variable '{name}' is not set.")
+    return value
+
+
+ANTHROPIC_API_KEY = _require("ANTHROPIC_API_KEY")
 
 NAVIGATOR_MODEL = os.environ.get("NAVIGATOR_MODEL", "claude-haiku-4-5-20251001")
 RESPONDER_MODEL = os.environ.get("RESPONDER_MODEL", "claude-sonnet-4-6")
