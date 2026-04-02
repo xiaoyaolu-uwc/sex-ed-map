@@ -1,0 +1,18 @@
+Root: Consent
+├── What does consent look like? [2 Excerpts | Source 1, Source 2]
+├── Building Good Consent Practices
+│   ├── What makes consent hard? [1 Excerpt | Source 3]
+│   ├── Does consent ruin the mood? [1 Excerpt | Source 1]
+│   ├── How do I avoid crossing boundaries? [1 Excerpt | Source 2]
+│   └── How do I talk about boundaries? [1 Excerpt | Source 1]
+├── Giving and Refusing Consent
+│   ├── How do I say no? [1 Excerpt | Source 2]
+│   └── Do I want this? [3 Excerpts | Source 1, Source 3, Source 3]
+└── Violations of Consent
+    ├── Why do violations happen? [1 Excerpt | Source 3]
+    ├── Was my consent violated? [2 Excerpts | Source 1, Source 2]
+    ├── How do violations affect people? [1 Excerpt | Source 2]
+    └── Responding to Consent Violations
+        ├── What do I do in the moment? [1 Excerpt | Source 1]
+        ├── How do I cope afterward? [1 Excerpt | Source 3]
+        └── Can partners violate consent? [2 Excerpts | Source 2, Source 2]

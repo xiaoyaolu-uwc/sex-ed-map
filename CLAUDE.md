@@ -39,6 +39,29 @@ pip install -r requirements.txt
 streamlit run app.py
 ```
 
+## Documentation Convention
+
+Every function must have a docstring that states:
+- What the function does (one line)
+- `Input:` — each parameter, its type, and what it represents
+- `Output:` — return type and shape
+- `Used by:` — which other modules/functions call this
+- `Raises:` — any exceptions, if relevant
+
+Example:
+```python
+def get_sources(index: dict, node_ids: list[str]) -> list[dict]:
+    """Return all source excerpts from the given nodes, flattened into one list.
+
+    Input:  index (dict) — flat node index from loader.load_map()
+            node_ids (list[str]) — node IDs to collect excerpts from
+    Output: list of {"text": str, "citation": str} dicts
+    Used by: responder.py
+    """
+```
+
+Apply this to every function when writing new code or editing existing functions.
+
 ## Version Control
 
 - After every significant file edit (Write or Edit tool calls), auto-commit the changed file via a PostToolUse hook in `.claude/settings.json`

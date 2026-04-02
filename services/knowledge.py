@@ -2,30 +2,65 @@
 
 All functions take `index` as their first argument — the flat dict returned
 by knowledge_map.loader.load_map(). No global state.
+
+The index shape (produced by loader.py):
+    {
+        node_id (str): {
+            "node_id": str,
+            "topic": str,
+            "source_excerpts": list[{"text": str, "citation": str}],
+            "children": list[str],   # child node_ids, empty on leaf nodes
+            "parent_id": str | None, # None only on the root node
+        }
+    }
 """
 
 
 def get_node(index: dict, node_id: str) -> dict:
-    """Return the node record for node_id. Raises KeyError if not found."""
+    """Return the full node record for a given node_id.
+
+    Input:  index (dict), node_id (str)
+    Output: node record dict — {node_id, topic, source_excerpts, children, parent_id}
+    Raises: KeyError if node_id is not in the index
+    Used by: navigator.py, responder.py, app.py
+    """
     return index[node_id]
 
 
 def get_children(index: dict, node_id: str) -> list[dict]:
-    """Return node records for all children of node_id."""
+    """Return the full node records for all direct children of node_id.
+
+    Input:  index (dict), node_id (str)
+    Output: list of node record dicts, in map order; empty list if node is a leaf
+    Raises: KeyError if node_id is not in the index
+    Used by: app.py (map display), navigator.py (subtree rendering)
+    """
     node = index[node_id]
     return [index[child_id] for child_id in node["children"]]
 
 
 def is_leaf(index: dict, node_id: str) -> bool:
-    """True if node_id has no children."""
+    """Return True if node_id has no children (i.e. it holds source excerpts).
+
+    Input:  index (dict), node_id (str)
+    Output: bool
+    Raises: KeyError if node_id is not in the index
+    Used by: responder.py (decides clarify vs. respond mode),
+             build_subtree_text (labels leaf nodes in the navigator prompt)
+    """
     return len(index[node_id]["children"]) == 0
 
 
 def get_sources(index: dict, node_ids: list[str]) -> list[dict]:
-    """Return all source_excerpts from the given nodes, flattened.
+    """Return all source excerpts from the given nodes, flattened into one list.
 
-    Skips nodes with no excerpts. Used by the responder to gather citations
-    for all active leaf branches.
+    Skips nodes with no excerpts (non-leaf nodes). Order follows node_ids order.
+
+    Input:  index (dict), node_ids (list[str]) — typically the current_node values
+            of all active branches that are at leaf nodes
+    Output: list of {"text": str, "citation": str} dicts
+    Used by: responder.py — passes these excerpts to the responder LLM so it can
+             cite sources in its reply
     """
     sources = []
     for node_id in node_ids:
@@ -36,7 +71,12 @@ def get_sources(index: dict, node_ids: list[str]) -> list[dict]:
 def get_initial_branches(index: dict, root_id: str) -> list[dict]:
     """Return the starting active_branches list for a new session.
 
-    Starts with a single branch at the root node.
+    Creates a single branch at the root node, with path=[root_id] and
+    children populated from the index.
+
+    Input:  index (dict), root_id (str) — the node_id of the tree root
+    Output: list with one branch dict: {current_node, path, children}
+    Used by: session.py (initialises session state on first load / reset)
     """
     root = index[root_id]
     return [
@@ -49,9 +89,16 @@ def get_initial_branches(index: dict, root_id: str) -> list[dict]:
 
 
 def reconstruct_branch(index: dict, node_id: str) -> dict:
-    """Build a full branch object for node_id from the map index.
+    """Build a full branch object for node_id by walking the parent_id chain.
 
-    Walks the parent_id chain to reconstruct the path from root.
+    The navigator LLM only outputs a current_node ID. This function fills in
+    the full path (root → node_id) and the children list from the index.
+
+    Input:  index (dict), node_id (str)
+    Output: branch dict — {current_node, path: [root, ..., node_id], children: [ids]}
+    Raises: KeyError if node_id or any ancestor is not in the index
+    Used by: navigator.py — called on every node_id in new_active_branches to
+             reconstruct full branch objects from the model's minimal output
     """
     path = []
     current = node_id
@@ -74,9 +121,22 @@ def build_subtree_text(
 ) -> str:
     """Render the subtree rooted at node_id as indented text for the navigator prompt.
 
-    The root call (depth 0) is marked '← HERE'.
-    Leaf nodes are marked '[leaf]'.
-    Expands up to max_depth levels below the root.
+    The root call (depth 0) is marked '← HERE' so the model knows where it is.
+    Leaf nodes are marked '[leaf]' so the model knows it can stop there.
+    Expands up to max_depth levels below the root — controls how much of the
+    tree the model sees per call.
+
+    Input:  index (dict)
+            node_id (str) — root of the subtree to render
+            max_depth (int) — how many levels below node_id to show
+            _depth (int) — internal recursion counter, do not pass
+    Output: multi-line string, e.g.:
+                violations_of_consent — Violations of Consent  ← HERE
+                  why_do_violations_happen — Why do violations happen? [leaf]
+                  responding_to_consent_violations — Responding to Consent Violations
+                    what_do_i_do_in_the_moment — What do I do in the moment? [leaf]
+    Used by: navigator.py (_build_user_message) — injected into the user message
+             once per active branch so the model can see where it is and where it can go
     """
     node = index[node_id]
     indent = "  " * _depth
