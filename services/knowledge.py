@@ -155,7 +155,8 @@ def render_map(index: dict, root_id: str, active_branches: list[dict]) -> str:
     def _render_node(node_id: str, prefix: str, child_prefix: str) -> list[str]:
         node = index[node_id]
         css = _style(node_id)
-        line = f'<span style="{css}">{prefix}{node["topic"]}</span>'
+        safe_prefix = prefix.replace(" ", "&nbsp;")
+        line = f'<span style="{css}">{safe_prefix}{node["topic"]}</span>'
         lines = [line]
         for i, cid in enumerate(node["children"]):
             is_last = i == len(node["children"]) - 1
@@ -181,7 +182,7 @@ def render_map(index: dict, root_id: str, active_branches: list[dict]) -> str:
             )
         )
 
-    inner = "\n".join(lines)
+    inner = "<br>".join(lines)
     return f'<pre style="font-family:monospace;font-size:0.85em;line-height:1.5">{inner}</pre>'
 
 
