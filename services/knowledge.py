@@ -113,6 +113,78 @@ def reconstruct_branch(index: dict, node_id: str) -> dict:
     }
 
 
+def render_map(index: dict, root_id: str, active_branches: list[dict]) -> str:
+    """Render the full knowledge tree as a coloured HTML string for the Streamlit sidebar.
+
+    Each node is styled based on its relationship to the active branches:
+      - Green bold  : current active node  → appends ' (current)'
+      - Yellow      : direct child of any current node  → appends ' (+)'
+      - White       : ancestor on the path to a current node  → appends ' (*)'
+      - Grey        : all other nodes (no tag)
+
+    Input:  index (dict) — flat node index from loader.load_map()
+            root_id (str) — node ID of the tree root
+            active_branches (list[dict]) — current branch state from session;
+                each branch: {current_node, path, children}
+    Output: str — HTML string; wrap in st.markdown(..., unsafe_allow_html=True)
+    Used by: app.py — rendered in the sidebar after every turn
+    """
+    current_nodes = {b["current_node"] for b in active_branches}
+    ancestor_nodes = {
+        nid
+        for b in active_branches
+        for nid in b["path"]
+        if nid not in current_nodes
+    }
+    child_nodes = {
+        cid
+        for b in active_branches
+        for cid in index[b["current_node"]]["children"]
+        if cid not in current_nodes
+    }
+
+    def _style(node_id: str) -> str:
+        if node_id in current_nodes:
+            return "color:#4ade80;font-weight:bold"
+        if node_id in child_nodes:
+            return "color:#facc15"
+        if node_id in ancestor_nodes:
+            return "color:#ffffff"
+        return "color:#6b7280"
+
+    def _render_node(node_id: str, prefix: str, child_prefix: str) -> list[str]:
+        node = index[node_id]
+        css = _style(node_id)
+        line = f'<span style="{css}">{prefix}{node["topic"]}</span>'
+        lines = [line]
+        for i, cid in enumerate(node["children"]):
+            is_last = i == len(node["children"]) - 1
+            lines.extend(
+                _render_node(
+                    cid,
+                    child_prefix + ("└── " if is_last else "├── "),
+                    child_prefix + ("    " if is_last else "│   "),
+                )
+            )
+        return lines
+
+    root = index[root_id]
+    css = _style(root_id)
+    lines = [f'<span style="{css}">Root: {root["topic"]}</span>']
+    for i, cid in enumerate(root["children"]):
+        is_last = i == len(root["children"]) - 1
+        lines.extend(
+            _render_node(
+                cid,
+                "└── " if is_last else "├── ",
+                "    " if is_last else "│   ",
+            )
+        )
+
+    inner = "\n".join(lines)
+    return f'<pre style="font-family:monospace;font-size:0.85em;line-height:1.5">{inner}</pre>'
+
+
 def build_subtree_text(
     index: dict,
     node_id: str,
