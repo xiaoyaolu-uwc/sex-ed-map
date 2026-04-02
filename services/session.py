@@ -26,7 +26,18 @@ def initialise(index: dict, root_id: str) -> None:
     Used by: app.py — called once at the top of the script on every rerun
     """
     if "conversation_history" not in st.session_state:
-        st.session_state.conversation_history = []
+        st.session_state.conversation_history = [
+            {
+                "role": "assistant",
+                "content": (
+                    "Hi, I'm Haven. I'm here to help you think through questions "
+                    "about relationships, boundaries, and consent — whether something "
+                    "happened to you, something you're navigating with a partner, or "
+                    "just something you've been wondering about.\n\n"
+                    "What's on your mind?"
+                ),
+            }
+        ]
     if "active_branches" not in st.session_state:
         st.session_state.active_branches = get_initial_branches(index, root_id)
     if "navigator_state" not in st.session_state:

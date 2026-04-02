@@ -68,21 +68,6 @@ st.header("Haven")
 
 state = session.get_state()
 
-# On first load, generate an opening question from the responder.
-if not state["conversation_history"]:
-    with st.chat_message("assistant"):
-        opening = st.write_stream(
-            responder.respond(
-                user_message="",
-                conversation_history=[],
-                active_branches=state["active_branches"],
-                index=index,
-            )
-        )
-    st.session_state.conversation_history.append(
-        {"role": "assistant", "content": opening}
-    )
-
 for turn in state["conversation_history"]:
     with st.chat_message(turn["role"]):
         st.markdown(turn["content"])
