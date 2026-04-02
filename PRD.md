@@ -136,24 +136,35 @@ Navigation model — for each active branch, the model may:
 
 #### Step 2: Responder
 
-**Purpose:** Generate the user-facing message — either a follow-up question (if navigating) or a cited answer (if at a leaf).
+**Purpose:** Guide the user toward relevant therapeutic content with full transparency — asking targeted questions to narrow focus, then offering retrieved content before delivering it, and finally synthesising it into substantive help when the user confirms they want it.
 
 **Model:** High-quality (e.g., Claude Sonnet). The responder's job is empathetic, clear, well-written communication.
 
+**Overarching principle:** Transparency. Haven never dumps information on the user unprompted. It first learns enough to find the right content, then tells the user what it found and asks if that's what they're looking for, then delivers it. The user is always in control of what they receive.
+
 **Input:**
-- Session state: conversation history + `new_active_branches` (output from navigator)
-- Source excerpts from any nodes currently in `active_branches` that have them (leaf nodes)
+- The user's latest message
+- Conversation history (last N turns)
+- A rendered view of all active branches (path from root with topic names, leaf status) — lets the model ask well-targeted questions and frame offers accurately
+- Source excerpts from any leaf nodes in `active_branches` — injected **always** when leaves are active, even in preview mode, so the model knows what it can offer without hallucinating
 
-**Output:** A single natural-language message to the user synthesizing across all active branches. Two modes:
+**Output:** A single short, conversational message. One of three modes:
 
-1. **Clarifying mode** (when no active branches are at leaf nodes): An empathetic question that helps narrow down what the user needs. Should reflect the range of currently active branches without listing them mechanically.
+1. **Elicitive mode** (no active branches at leaf nodes): One deep, targeted question that will help narrow the conversation to the most relevant content. Should feel natural, not like a diagnostic form. Informed by the active branch topics so it's specific, not generic.
 
-2. **Response mode** (when one or more active branches are at leaf nodes): A substantive answer drawing from the source excerpts at those nodes. Must include inline citations (e.g., `[Author, Year]`). Should be warm, grounded, and actionable. Never hallucinates beyond what's in the sources.
+2. **Preview mode** (≥1 leaf node active, user has not yet asked for the content): Tell the user what we found — briefly and warmly — and ask if it sounds like what they're looking for. The leaf content is in context so the model can frame the offer accurately, but it must **not** be delivered yet. Response stays short and conversational.
+
+3. **Advice mode** (≥1 leaf node active, user's last message explicitly indicates they want the retrieved content): Draw from the leaf excerpts and everything known about the user's situation. Give substantive, cited, actionable help. Must include inline citations (e.g., `[Author, Year]`). Still warm and conversational — never a wall of clinical text.
+
+**Mode detection (model's responsibility):**
+- Leaf nodes active? → Preview or Advice, else Elicitive
+- Leaf nodes active AND user's last message clearly says "yes", "tell me more", "I'd like to know", etc.? → Advice, else Preview
 
 **Requirements:**
-- Responses must cite sources when drawing from them. No uncited therapeutic claims.
-- The tone must be warm and non-clinical — like talking to a knowledgeable, caring friend.
-- Clarifying questions must feel natural, not like a diagnostic questionnaire.
+- Response must always be conversational — even in Advice mode with 2 000 tokens of source material in context, the reply itself should not balloon
+- Responses in Advice mode must cite sources. No uncited therapeutic claims.
+- Tone: warm, like a knowledgeable, caring friend. Never clinical.
+- Clarifying and preview questions must feel natural, not scripted.
 - The responder reads state directly — there is no handoff object from the navigator beyond the updated `active_branches`.
 
 ### 3.3 Session State
