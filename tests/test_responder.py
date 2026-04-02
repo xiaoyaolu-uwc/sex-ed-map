@@ -35,7 +35,7 @@ import config
 # Load map
 # ---------------------------------------------------------------------------
 
-_raw_tree, INDEX = load_map(Path(__file__).parent.parent / "knowledge_map" / "map.json")
+_raw_tree, INDEX = load_map()
 
 # ---------------------------------------------------------------------------
 # Helper
