@@ -31,17 +31,17 @@ def initialise(index: dict, root_id: str) -> None:
                 "role": "assistant",
                 "content": (
                     "Hi, I'm Haven.\n\n"
-                    "I'm here to help you think through questions about consent, "
-                    "boundaries, and relationships — whether something happened to you, "
-                    "something you're navigating with a partner, or just something "
-                    "you've been sitting with.\n\n"
-                    "Here's how I work: I'll start by learning a bit about what's on "
-                    "your mind. As the conversation develops, I'll look for relevant "
-                    "content from evidence-based sources. When I find something that "
-                    "seems useful, I'll let you know what I found and check whether "
-                    "it's what you're looking for — and only if you want it, I'll share "
-                    "the actual guidance, with the sources it comes from.\n\n"
-                    "So to start: what's brought you here today?"
+                    "I'm here to help with questions about consent, boundaries, and "
+                    "relationships. Whatever brought you here, we can work through it.\n\n"
+                    "I work a little differently to most chatbots. Rather than jumping "
+                    "straight to advice, I'll ask you a few questions first so I can "
+                    "find content that's actually relevant to your situation. When I do, "
+                    "I'll tell you what I found and check it sounds right before sharing "
+                    "anything. Everything I offer comes from real sources, cited.\n\n"
+                    "To get there I'll need to understand your situation a bit, so "
+                    "expect more back-and-forth than you might be used to. The more "
+                    "context you share, the more useful I can be.\n\n"
+                    "What's brought you here today?"
                 ),
             }
         ]
