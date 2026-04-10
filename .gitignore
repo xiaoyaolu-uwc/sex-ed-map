@@ -1,6 +1,10 @@
 # Claude Code
 memory/
 
+# Personal / non-code files
+Haven_Finalized_Proposal.docx
+todo-later.md
+
 # Python
 __pycache__/
 *.py[cod]
