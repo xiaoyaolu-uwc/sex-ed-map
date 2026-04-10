@@ -1,4 +1,4 @@
-# Haven MVP
+# Sexual Education Map Traversal
 
 A mental health support tool that guides users to relevant therapeutic content through structured dialogue — not a free-form chatbot. Haven uses a hand-curated knowledge map and a two-model pipeline to navigate users to grounded, cited answers from vetted sources. It never makes things up.
 
